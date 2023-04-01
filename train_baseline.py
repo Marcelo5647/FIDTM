@@ -40,6 +40,9 @@ def main(args):
     elif args['dataset'] == 'NWPU':
         train_file = './npydata/nwpu_train.npy'
         test_file = './npydata/nwpu_val.npy'
+    elif args['dataset'] == 'CityPark':
+        train_file = './npydata/CityPark_train.npy'
+        test_file = './npydata/CityPark_val.npy'
 
     with open(train_file, 'rb') as outfile:
         train_list = np.load(outfile).tolist()
@@ -84,20 +87,25 @@ def main(args):
         train_data = train_list
         test_data = test_list
 
-
+    val_mae_list = []
+    train_mse_loss_list = []
     for epoch in range(args['start_epoch'], args['epochs']):
 
         start = time.time()
-        train(train_data, model, criterion, optimizer, epoch, args)
+        epoch_loss = train(train_data, model, criterion, optimizer, epoch, args)
         end1 = time.time()
 
+        train_mse_loss_list.append(epoch_loss)
+
         '''inference '''
-        if epoch % 10 == 0 and epoch >= 200:
+        # if epoch % 10 == 0 and epoch >= 200:
+        if epoch % 10 == 0:
             prec1, visi = validate(test_data, model, args)
 
             end2 = time.time()
 
             is_best = prec1 < args['best_pred']
+            val_mae_list.append(prec1)
             args['best_pred'] = min(prec1, args['best_pred'])
 
             print(' * best MAE {mae:.3f} '.format(mae=args['best_pred']), args['save_path'], end1 - start, end2 - end1)
@@ -110,6 +118,10 @@ def main(args):
                 'optimizer': optimizer.state_dict(),
             }, visi, is_best, args['save_path'])
 
+            np.save(os.path.join(args['save_path'], 'val_mae_list.npy'), val_mae_list)
+
+        np.save(os.path.join(args['save_path'], 'train_mse_loss_list.npy'), train_mse_loss_list)
+
 def pre_data(train_list, args, train):
     print("Pre_load dataset ......")
     data_keys = {}
@@ -117,7 +129,7 @@ def pre_data(train_list, args, train):
     for j in range(len(train_list)):
         Img_path = train_list[j]
         fname = os.path.basename(Img_path)
-        # print(fname)
+        print(fname)
         img, fidt_map, kpoint = load_data_fidt(Img_path, args, train)
 
         if min(fidt_map.shape[0], fidt_map.shape[1]) < 256 and train == True:
@@ -192,6 +204,8 @@ def train(Pre_data, model, criterion, optimizer, epoch, args):
                 .format(
                 epoch, i, len(train_loader), batch_time=batch_time,
                 data_time=data_time, loss=losses))
+
+    return losses.avg
 
 
 

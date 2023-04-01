@@ -8,6 +8,7 @@ if not os.path.exists('./npydata'):
 shanghai_root = '/home/dkliang/projects/synchronous/dataset/ShanghaiTech'
 jhu_root = '/home/dkliang/projects/synchronous/dataset/jhu_crowd_v2.0'
 qnrf_root = '/home/dkliang/projects/synchronous/dataset/UCF-QNRF_ECCV18'
+city_park_root = ''
 
 try:
 
@@ -140,3 +141,30 @@ try:
     print("Generate NWPU image list successfully")
 except:
     print("The NWPU dataset path is wrong. Please check your path.")
+
+try:
+
+    city_park_path = city_park_root + '/train_data/images/'
+
+    train_list_txt_path = 'img_list_train.txt'
+    test_list_txt_path = 'img_list_test.txt'
+
+    train_list = []   
+    for filename in np.loadtxt(train_list_txt_path, dtype=str):
+        if filename.split('.')[1] == 'png':
+            train_list.append(city_park_path + filename)
+
+    train_list.sort()
+    np.save('./npydata/CityPark_train.npy', train_list)
+
+    test_list = []
+    for filename in np.loadtxt(test_list_txt_path, dtype=str):
+        if filename.split('.')[1] == 'png':
+            test_list.append(city_park_path + filename)
+    test_list.sort()
+    np.save('./npydata/CityPark_val.npy', test_list)
+
+    print("generated CityPark image list successfully")
+except:
+    print("The CityPark dataset path is wrong. Please check you path.")
+

@@ -31,7 +31,7 @@ parser.add_argument('--seed', type=int, default=1,
                     help='random seed')
 parser.add_argument('--best_pred', type=int, default=1e5,
                     help='best pred')
-parser.add_argument('--gpu_id', type=str, default='1',
+parser.add_argument('--gpu_id', type=str, default='0',
                     help='gpu id')
 parser.add_argument('--lr', type=float, default= 1e-4,
                     help='learning rate')

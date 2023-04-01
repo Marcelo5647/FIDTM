@@ -8,14 +8,16 @@ import cv2
 
 
 def load_data_fidt(img_path, args, train=True):
-    gt_path = img_path.replace('.jpg', '.h5').replace('images', 'gt_fidt_map')
+    gt_fidt_path = img_path.replace('.png', '.h5').replace('images', 'gt_fidt_map')
+    gt_loc_path = img_path.replace('.png', '.npy').replace('images', 'ground_truth_localization')
+    
     img = Image.open(img_path).convert('RGB')
 
     while True:
         try:
-            gt_file = h5py.File(gt_path)
-            k = np.asarray(gt_file['kpoint'])
-            fidt_map = np.asarray(gt_file['fidt_map'])
+            k = np.load(gt_loc_path)
+            gt_fidt_file = h5py.File(gt_fidt_path)
+            fidt_map = np.asarray(gt_fidt_file['fidt_map'])
             break
         except OSError:
             print("path is wrong, can not load ", img_path)
