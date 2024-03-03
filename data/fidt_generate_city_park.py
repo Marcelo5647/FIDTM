@@ -10,12 +10,12 @@ import scipy.spatial
 from scipy.ndimage.filters import gaussian_filter
 
 '''change your path'''
-root = ''
+root = '/srv/storage/datasets/marcelo/CityPark/'
 
-train_data_path = os.path.join(root, 'train_data', 'images')
+train_data_path = os.path.join(root, 'test_data', 'images')
 
-if not os.path.exists(train_data_path.replace('images', 'gt_fidt_map')):
-    os.makedirs(train_data_path.replace('images', 'gt_fidt_map'))
+if not os.path.exists(train_data_path.replace('images', 'gt_fidt_maps')):
+    os.makedirs(train_data_path.replace('images', 'gt_fidt_maps'))
 
 if not os.path.exists(train_data_path.replace('images', 'gt_show')):
     os.makedirs(train_data_path.replace('images', 'gt_show'))
@@ -53,30 +53,14 @@ def fidt_generate1(im_data, gt_data, lamda):
 
 for img_path in img_paths:
     print(img_path)
-    fidt_map_path = img_path.replace('.png', '.h5').replace('images', 'gt_fidt_map')
-    # if not os.path.isfile(fidt_map_path):
-    if True:
+    fidt_map_path = img_path.replace('.png', '.npy').replace('images', 'gt_fidt_maps')
+    if not os.path.isfile(fidt_map_path):
         Img_data = cv2.imread(img_path)
 
-        dot_map = np.load(img_path.replace('.png', '.npy').replace('images', 'ground_truth_localization'))
+        dot_map = np.load(img_path.replace('.png', '.npy').replace('images', 'gt_dots'))
         points_tuple = np.where(dot_map==1)
         Gt_data = [[y_coord, x_coord] for x_coord, y_coord in zip(points_tuple[0], points_tuple[1])]
 
         fidt_map1 = fidt_generate1(Img_data, Gt_data, 1)
 
-        # kpoint = np.zeros((Img_data.shape[0], Img_data.shape[1]))
-        # for i in range(0, len(Gt_data)):
-        #     if int(Gt_data[i][1]) < Img_data.shape[0] and int(Gt_data[i][0]) < Img_data.shape[1]:
-        #         kpoint[int(Gt_data[i][1]), int(Gt_data[i][0])] = 1
-
-        with h5py.File(fidt_map_path, 'w') as hf:
-            hf['fidt_map'] = fidt_map1
-            # hf['kpoint'] = kpoint
-
-        # fidt_map1 = fidt_map1
-        # fidt_map1 = fidt_map1 / np.max(fidt_map1) * 255
-        # fidt_map1 = fidt_map1.astype(np.uint8)
-        # fidt_map1 = cv2.applyColorMap(fidt_map1, 2)
-
-        '''for visualization'''
-        # cv2.imwrite(img_path.replace('images', 'gt_show').replace('png', 'jpg'), fidt_map1)
+        np.save(fidt_map_path, fidt_map1)

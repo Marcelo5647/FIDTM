@@ -98,7 +98,6 @@ def main(args):
         train_mse_loss_list.append(epoch_loss)
 
         '''inference '''
-        # if epoch % 10 == 0 and epoch >= 200:
         if epoch % 10 == 0:
             prec1, visi = validate(test_data, model, args)
 

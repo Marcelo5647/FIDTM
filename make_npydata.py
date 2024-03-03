@@ -8,7 +8,7 @@ if not os.path.exists('./npydata'):
 shanghai_root = '/home/dkliang/projects/synchronous/dataset/ShanghaiTech'
 jhu_root = '/home/dkliang/projects/synchronous/dataset/jhu_crowd_v2.0'
 qnrf_root = '/home/dkliang/projects/synchronous/dataset/UCF-QNRF_ECCV18'
-city_park_root = ''
+city_park_root = '/srv/storage/datasets/marcelo/CityPark'
 
 try:
 
@@ -142,29 +142,37 @@ try:
 except:
     print("The NWPU dataset path is wrong. Please check your path.")
 
-try:
+# try:
 
-    city_park_path = city_park_root + '/train_data/images/'
+city_park_path = city_park_root + '/train_data/images/'
 
-    train_list_txt_path = 'img_list_train.txt'
-    test_list_txt_path = 'img_list_test.txt'
+train_list_txt_path = city_park_root + '/train_data/img_list_train.txt'
+valid_list_txt_path = city_park_root + '/train_data/img_list_valid.txt'
+test_list_txt_path = city_park_root + '/test_data/img_list_test.txt'
 
-    train_list = []   
-    for filename in np.loadtxt(train_list_txt_path, dtype=str):
-        if filename.split('.')[1] == 'png':
-            train_list.append(city_park_path + filename)
+train_list = []   
+for filename in np.loadtxt(train_list_txt_path, dtype=str):
+    if filename.split('.')[1] == 'png':
+        train_list.append(city_park_path + filename)
 
-    train_list.sort()
-    np.save('./npydata/CityPark_train.npy', train_list)
+train_list.sort()
+np.save('./npydata/CityPark_train.npy', train_list)
 
-    test_list = []
-    for filename in np.loadtxt(test_list_txt_path, dtype=str):
-        if filename.split('.')[1] == 'png':
-            test_list.append(city_park_path + filename)
-    test_list.sort()
-    np.save('./npydata/CityPark_val.npy', test_list)
+valid_list = []
+for filename in np.loadtxt(valid_list_txt_path, dtype=str):
+    if filename.split('.')[1] == 'png':
+        valid_list.append(city_park_path + filename)
+valid_list.sort()
+np.save('./npydata/CityPark_val.npy', valid_list)
 
-    print("generated CityPark image list successfully")
-except:
-    print("The CityPark dataset path is wrong. Please check you path.")
+test_list = []
+for filename in np.loadtxt(test_list_txt_path, dtype=str):
+    if filename.split('.')[1] == 'png':
+        test_list.append(city_park_path + filename)
+test_list.sort()
+np.save('./npydata/CityPark_test.npy', test_list)
+
+print("generated CityPark image list successfully")
+# except:
+#     print("The CityPark dataset path is wrong. Please check you path.")
 
