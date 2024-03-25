@@ -8,7 +8,8 @@ from utils import hungarian, read_pred_and_gt, AverageMeter, AverageCategoryMete
 import argparse
 
 parser = argparse.ArgumentParser(description='FIDTM')
-parser.add_argument('eval_dataset', type=str, help='choice eval dataset')
+parser.add_argument('eval_dataset', type=str, help='choose eval dataset')
+parser.add_argument('pred_file', type=str, help='choose pred_file')
 args = parser.parse_args()
 
 if args.eval_dataset == 'ShanghaiA':
@@ -33,6 +34,10 @@ elif args.eval_dataset == 'NWPU':
     id_std = [i for i in range(3110, 3610, 1)]
     id_std[59] = 3098
 
+elif args.eval_dataset == 'CityPark':
+    gt_file = './point_files/city_park_gt.txt'
+    pred_file = f'./point_files/{args.pred_file}'
+    id_std = [i for i in range(1, 751, 1)]
 
 
 num_classes = 1

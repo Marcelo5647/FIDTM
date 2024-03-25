@@ -3,19 +3,19 @@ import argparse
 parser = argparse.ArgumentParser(description='FIDTM')
 
 
-parser.add_argument('--dataset', type=str, default='ShanghaiA',
+parser.add_argument('--dataset', type=str, default='CityPark',
                     help='choice train dataset')
 
 
-parser.add_argument('--save_path', type=str, default='save_file/A_baseline',
+parser.add_argument('--save_path', type=str, default='save_file/CityPark_default',
                     help='save checkpoint directory')
 parser.add_argument('--workers', type=int, default=16,
                     help='load data workers')
-parser.add_argument('--print_freq', type=int, default=200,
+parser.add_argument('--print_freq', type=int, default=1,
                     help='print frequency')
 parser.add_argument('--start_epoch', type=int, default=0,
                     help='start epoch for training')
-parser.add_argument('--epochs', type=int, default=3000,
+parser.add_argument('--epochs', type=int, default=400,
                     help='end epoch for training')
 parser.add_argument('--pre', type=str, default=None,
                     help='pre-trained model directory')

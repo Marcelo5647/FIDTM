@@ -154,8 +154,6 @@ train_list = []
 for filename in np.loadtxt(train_list_txt_path, dtype=str):
     if filename.split('.')[1] == 'png':
         train_list.append(city_park_path + filename)
-
-train_list.sort()
 np.save('./npydata/CityPark_train.npy', train_list)
 
 valid_list = []
@@ -169,7 +167,6 @@ test_list = []
 for filename in np.loadtxt(test_list_txt_path, dtype=str):
     if filename.split('.')[1] == 'png':
         test_list.append(city_park_path + filename)
-test_list.sort()
 np.save('./npydata/CityPark_test.npy', test_list)
 
 print("generated CityPark image list successfully")

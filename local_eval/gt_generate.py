@@ -1,48 +1,44 @@
 import os
-import time
 import glob
-import cv2
-import h5py
-import numpy as np
-import scipy.io
-import scipy.spatial
-from scipy.ndimage.filters import gaussian_filter
 import math
 import scipy.io as io
-from matplotlib import pyplot as plt
+import numpy as np
 import sys
 
 '''please set your dataset path'''
-root = '/home/dkliang/projects/synchronous/dataset/ShanghaiTech/'
+root = '/srv/storage/datasets/marcelo/CityPark/'
 
-part_A_test = os.path.join(root, 'part_A_final/test_data', 'images')
-path_sets = [part_A_test]
+dataset_test = os.path.join(root, 'test_data', 'images')
+path_sets = [dataset_test]
 
-if not os.path.exists(part_A_test):
+if not os.path.exists(dataset_test):
     sys.exit("The path is wrong, please check the dataset path.")
 
 
 img_paths = []
 for path in path_sets:
-    for img_path in glob.glob(os.path.join(path, '*.jpg')):
+    for img_path in glob.glob(os.path.join(path, '*.png')):
         img_paths.append(img_path)
 
 img_paths.sort()
 
-f = open('./A_gt.txt', 'w+')
+f = open('./city_park_gt.txt', 'w+')
 k = 1
 for img_path in img_paths:
 
     print(img_path)
-    mat = io.loadmat(img_path.replace('.jpg', '.mat').replace('images', 'ground_truth').replace('IMG_', 'GT_IMG_'))
-    Gt_data = mat["image_info"][0][0][0][0][0]
-    f.write('{} {} '.format(k, len(Gt_data)))
+    gt_dot_map_path = img_path.replace('.png', '.npy').replace('images', 'gt_dots')
+    dot_map = np.load(gt_dot_map_path)
 
-    for data in Gt_data:
+    indices = np.floor(np.where(dot_map == 1)).astype(int)
+    
+    f.write('{} {} '.format(k, len(indices[0])))
+
+    for y_index, x_index in zip(indices[0], indices[1]):
 
         sigma_s = 4
         sigma_l = 8
-        f.write('{} {} {} {} {} '.format(math.floor(data[0]), math.floor(data[1]), sigma_s, sigma_l, 1))
+        f.write('{} {} {} {} {} '.format(math.floor(y_index), math.floor(x_index), sigma_s, sigma_l, 1))
     f.write('\n')
 
     k = k + 1

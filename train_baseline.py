@@ -40,9 +40,10 @@ def main(args):
     elif args['dataset'] == 'NWPU':
         train_file = './npydata/nwpu_train.npy'
         test_file = './npydata/nwpu_val.npy'
-    elif args['dataset'] == 'CityPark':
-        train_file = './npydata/CityPark_train.npy'
-        test_file = './npydata/CityPark_val.npy'
+    elif 'CityPark' in args['dataset']:
+        dataset = args['dataset']
+        train_file = f'./npydata/{dataset}_train.npy'
+        test_file = f'./npydata/{dataset}_val.npy'
 
     with open(train_file, 'rb') as outfile:
         train_list = np.load(outfile).tolist()
