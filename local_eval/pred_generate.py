@@ -79,9 +79,9 @@ def main():
 
             f.write('{} {} '.format(index+1, len(indices[0])))
 
-            for y_index, x_index in zip(indices[0], indices[1]):
+            for row_index, column_index in zip(indices[0], indices[1]):
 
-                f.write('{} {} '.format(math.floor(y_index), math.floor(x_index)))
+                f.write('{} {} '.format(math.floor(row_index), math.floor(column_index)))
             f.write('\n')
 
 
